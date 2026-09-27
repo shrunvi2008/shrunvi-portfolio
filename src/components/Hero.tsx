@@ -65,8 +65,8 @@ export default function Hero() {
           <div className="absolute -bottom-4 -left-4 w-20 h-20 border border-violet2-500/15 rounded-full animate-float-slower" />
 
           {/* Frame */}
-          <div className="relative glow-border rounded-3xl bg-ink-850/80 border border-white/[0.08] p-2 overflow-hidden">
-            <div className="aspect-[4/5] rounded-2xl bg-gradient-to-br from-ink-800 via-ink-850 to-ink-900 flex items-center justify-center relative overflow-hidden">
+          <div className="relative p-2">
+            <div className="aspect-square rounded-full flex items-center justify-center relative overflow-hidden">
               <img
                 src="/assets/images/WhatsApp_Image_2026-09-15_at_8.29.08_PM.jpeg"
                 alt="Shrunvi Kamolkar"

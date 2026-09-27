@@ -74,7 +74,7 @@ export type Project = {
   demo?: string;
   featured?: boolean;
   visual: 'ecommerce' | 'contacts' | 'todo';
-  image?: string;
+  images?: string[];
 };
 
 export const PROJECTS: Project[] = [
@@ -90,7 +90,7 @@ export const PROJECTS: Project[] = [
     demo: '#',
     featured: true,
     visual: 'todo',
-    image: '/assets/images/image.png',
+    images: ['/assets/images/Screenshot%202026-09-16%20145653.png'],
   },
   {
     id: 'ecommerce',
@@ -102,7 +102,10 @@ export const PROJECTS: Project[] = [
     github: GITHUB_URL,
     demo: '#',
     visual: 'ecommerce',
-    image: '/assets/images/image%20copy.png',
+    images: [
+      '/assets/images/Screenshot%202026-09-16%20150532.png',
+      '/assets/images/Screenshot%202026-09-16%20150558.png',
+    ],
   },
   {
     id: 'contacts',
@@ -113,7 +116,12 @@ export const PROJECTS: Project[] = [
     tags: ['Python', 'Streamlit', 'SQLite'],
     github: GITHUB_URL,
     visual: 'contacts',
-    image: '/assets/images/Screenshot_2026-09-16_153916.png',
+    images: [
+      '/assets/images/Screenshot%202026-09-16%20153916.png',
+      '/assets/images/Screenshot%202026-09-16%20153958.png',
+      '/assets/images/Screenshot%202026-09-16%20154127.png',
+      '/assets/images/Screenshot%202026-09-16%20154153.png',
+    ],
   },
 ];
 

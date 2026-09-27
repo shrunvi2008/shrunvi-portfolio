@@ -57,7 +57,7 @@ export default function Navbar() {
           : 'bg-transparent border-b border-transparent'
       }`}
     >
-      <nav className="section-padding h-16 md:h-18 flex items-center justify-between">
+      <nav className="section-padding h-16 md:h-20 flex items-center justify-between">
         <a
           href="#home"
           className="font-display font-bold text-sm md:text-base tracking-wide text-white hover:text-accent-300 transition-colors duration-300"
@@ -106,7 +106,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-400 ease-out ${
+        className={`md:hidden overflow-hidden transition-all duration-500 ease-out ${
           open ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
         }`}
       >

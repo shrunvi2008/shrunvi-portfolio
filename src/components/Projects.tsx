@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { ArrowUpRight, Github, X } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { ArrowUpRight, Github, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { PROJECTS, type Project } from '@/data/portfolio';
 import { PROJECT_VISUALS } from './ProjectVisuals';
 
@@ -46,6 +46,109 @@ function Lightbox({
   );
 }
 
+function ImageCarousel({
+  images,
+  title,
+  onImageClick,
+}: {
+  images: string[];
+  title: string;
+  onImageClick: (image: string, title: string) => void;
+}) {
+  const [current, setCurrent] = useState(0);
+  const [imgError, setImgError] = useState<Record<number, boolean>>({});
+
+  const goTo = useCallback(
+    (index: number) => {
+      setCurrent((index + images.length) % images.length);
+    },
+    [images.length],
+  );
+
+  const handleError = (index: number) => {
+    setImgError((prev) => ({ ...prev, [index]: true }));
+  };
+
+  const hasValidImage = (index: number) => !imgError[index];
+
+  return (
+    <div className="absolute inset-0">
+      {images.map((img, index) =>
+        hasValidImage(index) ? (
+          <img
+            key={img}
+            src={img}
+            alt={`${title} screenshot ${index + 1}`}
+            onError={() => handleError(index)}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+              index === current ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+          />
+        ) : null,
+      )}
+
+      {/* Click to zoom */}
+      <button
+        type="button"
+        onClick={() => onImageClick(images[current], title)}
+        className="absolute inset-0 w-full h-full cursor-zoom-in"
+        aria-label={`View ${title} screenshot`}
+      />
+
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-ink-900/60 via-transparent to-transparent pointer-events-none" />
+
+      {/* Navigation arrows */}
+      {images.length > 1 && (
+        <>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              goTo(current - 1);
+            }}
+            aria-label="Previous screenshot"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-black/40 hover:bg-black/60 border border-white/10 text-white flex items-center justify-center transition-colors duration-200"
+          >
+            <ChevronLeft size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              goTo(current + 1);
+            }}
+            aria-label="Next screenshot"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-black/40 hover:bg-black/60 border border-white/10 text-white flex items-center justify-center transition-colors duration-200"
+          >
+            <ChevronRight size={16} />
+          </button>
+
+          {/* Dots indicator */}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  goTo(index);
+                }}
+                aria-label={`Go to screenshot ${index + 1}`}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === current
+                    ? 'bg-white w-4'
+                    : 'bg-white/40 hover:bg-white/60'
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function ProjectCard({
   project,
   index,
@@ -57,8 +160,7 @@ function ProjectCard({
 }) {
   const Visual = PROJECT_VISUALS[project.visual];
   const isFeatured = project.featured;
-  const [imgError, setImgError] = useState(false);
-  const hasImage = project.image && !imgError;
+  const hasImages = project.images && project.images.length > 0;
 
   return (
     <article
@@ -75,28 +177,16 @@ function ProjectCard({
           isFeatured ? 'lg:min-h-[420px] h-56 lg:h-auto' : 'h-48'
         }`}
       >
-        {hasImage ? (
-          <button
-            type="button"
-            onClick={() => onImageClick(project.image!, project.title)}
-            className="absolute inset-0 w-full h-full cursor-zoom-in"
-            aria-label={`View ${project.title} screenshot`}
-          >
-            <img
-              src={project.image}
-              alt={project.title}
-              onError={() => setImgError(true)}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-            />
-          </button>
+        {hasImages ? (
+          <ImageCarousel
+            images={project.images!}
+            title={project.title}
+            onImageClick={onImageClick}
+          />
         ) : (
           <div className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.02]">
             {Visual && <Visual />}
           </div>
-        )}
-        {/* Subtle dark overlay at bottom for text legibility */}
-        {hasImage && (
-          <div className="absolute inset-0 bg-gradient-to-t from-ink-900/60 via-transparent to-transparent" />
         )}
         {/* Number badge */}
         <div className="absolute top-4 left-4 font-mono text-xs text-white/40 z-10">
